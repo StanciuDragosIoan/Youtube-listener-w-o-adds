@@ -55,7 +55,11 @@
       const btn = document.querySelector("#getSongBtn");
       const getSong = (e) => {
         const url = document.querySelector("#videoLink").value;
-        const videoId = url.split("/")[3].split("=")[1];
+        let videoId = url.split("/")[3].split("=")[1];
+        if (videoId === undefined) {
+          console.log("https://youtu.be/TC9lJK8IVQI");
+          videoId = url.split("/")[3];
+        }
         const src = `https://www.youtube.com/embed/${videoId}`;
         console.log(src);
         const iFrameOutput = `
