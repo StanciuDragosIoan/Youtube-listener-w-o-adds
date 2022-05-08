@@ -64,11 +64,12 @@
         console.log(src);
         const iFrameOutput = `
         <iframe
-          width="560"
+          style="display: block; margin: auto; max-width :800px;"
           height="315"
           src=${src}
           title="YouTube video player"
           frameborder="0"
+          autoplay=1
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowfullscreen
         ></iframe>
