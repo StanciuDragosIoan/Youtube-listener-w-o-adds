@@ -1,67 +1,136 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-      crossorigin="anonymous"
-    />
-  </head>
-  <body>
-    <div class="container">
-      <div class="row mt-5">
-        <div class="col-sm-12 col-md-6 mx-auto">
-          <h3 class="text-center">
-            Paste youtube url to listen to music w/o adds!
-          </h3>
-          <form>
-            <div class="mb-3">
-              <label for="exampleInputEmail1" class="form-label">Link</label>
-              <input
-                type="text"
-                class="form-control"
-                id="videoLink"
-                aria-describedby="videoLinkField"
-              />
-              <div id="emailHelp" class="form-text">Paste Video</div>
-            </div>
 
-            <button type="submit" class="btn btn-primary" id="getSongBtn">
-              Get Addless Song!
-            </button>
-          </form>
-        </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+</head>
+
+<body>
+  <div class="container">
+    <div class="row mt-5">
+      <div class="col-sm-12 col-md-6 mx-auto">
+        <h3 class="text-center">
+          Paste youtube url to listen to music w/o adds!
+        </h3>
+        <form>
+          <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Link</label>
+            <input type="text" class="form-control" id="videoLink" aria-describedby="videoLinkField" />
+            <div id="emailHelp" class="form-text">Paste Video</div>
+          </div>
+
+          <button type="submit" class="btn btn-primary" id="getSongBtn">
+            Get Addless Song!
+          </button>
+        </form>
       </div>
     </div>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-      crossorigin="anonymous"
-    ></script>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
 
-    <br />
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-12 col-md-6 mx-auto" id="outputDiv"></div>
-      </div>
+  <br />
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12 col-md-6 mx-auto" id="outputDiv"></div>
+    </div>
+    <div id="storeHeader">
+
     </div>
 
-    <script>
-      const btn = document.querySelector("#getSongBtn");
-      const getSong = (e) => {
-        const url = document.querySelector("#videoLink").value;
-        let videoId = url.split("/")[3].split("=")[1];
-        if (videoId === undefined) {
-          console.log("https://youtu.be/TC9lJK8IVQI");
-          videoId = url.split("/")[3];
-        }
-        const src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
-        const iFrameOutput = `
+    <div class="row" id="test">
+
+    </div>
+  </div>
+
+  <script>
+    // var getCookies = function () {
+    //   var pairs = document.cookie.split(";");
+    //   var cookies = {};
+    //   for (var i = 0; i < pairs.length; i++) {
+    //     var pair = pairs[i].split("=");
+    //     cookies[(pair[0] + '').trim()] = unescape(pair.slice(1).join('='));
+    //   }
+    //   return cookies;
+    // }
+
+    // const cookies = getCookies();
+    // console.log("cookies here.")
+    // console.log(cookies)
+
+    // document.cookie = "tagname = SameSite;Secure";
+    document.cookie = "SameSite = Lax";
+    let output = '';
+
+
+
+    const displaySongs = (store) => {
+      store.map(i => {
+        output += `<div class="col mt-3">
+           ${i}  
+          </div>`
+      });
+      localStorage.setItem("youtubeVideos", JSON.stringify(store))
+      document.querySelector("#test").innerHTML = output;
+    }
+
+    const getStore = () => {
+      let store;
+      let isStore = localStorage.getItem("youtubeVideos");
+      if (!isStore) {
+        store = [];
+      } else {
+        store = JSON.parse(isStore);
+      }
+
+      return store;
+    }
+
+    const btn = document.querySelector("#getSongBtn");
+
+    let store = getStore();
+    if (store.length > 0) {
+      document.querySelector("#storeHeader").innerHTML = `<h3 class="text-center">Stored songs</h3>`;
+    }
+    displaySongs(store);
+
+
+    const collection = document.querySelectorAll(".playable");
+    let collectionArr = Array.from(collection);
+    collectionArr.map(i => i.addEventListener("click", (e) => {
+      console.log(e.target)
+      console.log("click")
+    }))
+    console.log(collectionArr)
+
+
+    const storeSong = (iFrameOutput) => {
+      document.querySelector("#storeHeader").innerHTML = `<h3 class="text-center">Stored songs</h3>`;
+      output = '';
+      const isFound = store.find(i => i === iFrameOutput);
+      if (!isFound) {
+        store.push(iFrameOutput);
+      }
+
+      displaySongs(store);
+
+    }
+
+    const getSong = (e) => {
+      const url = document.querySelector("#videoLink").value.replace('watch?v=', '');
+      let videoId = url.split("/")[3].split("=")[1];
+      if (videoId === undefined) {
+        videoId = url.split("/")[3];
+      }
+      const src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+      const noAutoSrc = `https://www.youtube.com/embed/${videoId}`;
+      const iFrameOutput = `
         <iframe
           style="display: block; margin: auto; max-width :800px;"
           height="315"
@@ -72,11 +141,28 @@
           allowfullscreen
         ></iframe>
         `;
-        document.querySelector("#outputDiv").innerHTML = iFrameOutput;
-        e.preventDefault();
-      };
 
-      btn.addEventListener("click", getSong);
-    </script>
-  </body>
+
+      const iframeToStore = `
+        <iframe
+          class="playable"
+          SameSite=Strict
+          style="display: block; margin: auto; max-width :800px; background:red; margin: 10px;"
+          height="315"
+          src=${noAutoSrc}
+          title="YouTube video player"
+          frameborder="0"
+          allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        ></iframe>
+        `;
+      storeSong(iframeToStore);
+      document.querySelector("#outputDiv").innerHTML = iFrameOutput;
+      e.preventDefault();
+    };
+
+    btn.addEventListener("click", getSong);
+  </script>
+</body>
+
 </html>
